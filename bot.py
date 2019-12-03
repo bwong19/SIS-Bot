@@ -42,18 +42,20 @@ selectAll.click()
 WebDriverWait(browser, 10)
 register = browser.find_element_by_id("ctl00_contentPlaceHolder_ibEnroll")
 
-# # Wait until its 7 O'clock
+# Wait until its 7 O'clock
 while True:
 	current_hour = datetime.datetime.now().time().hour
 	if current_hour >= 7:
 		browser.execute_script("arguments[0].click();", register)
 		WebDriverWait(browser, 10000)
         while True:
-        if (browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')):
-            yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')
-            cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
-            yes.click()
-            WebDriverWait(browser, 10)
-            cont.click()
-		break
+            if (browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')):
+                yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')
+                cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+                yes.click()
+                WebDriverWait(browser, 10)
+                cont.click()
+            else:
+                break
+        break
 
