@@ -11,7 +11,7 @@ First, make sure all of the classes you want to register for are in your cart on
 ```
 git clone https://github.com/bwong19/SIS-Bot.git
 cd SIS-Bot
-pip install -r requirements.txt
+pip install selenium
 brew install chromedriver
 ```
 
