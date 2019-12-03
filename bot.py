@@ -48,5 +48,12 @@ while True:
 	if current_hour >= 7:
 		browser.execute_script("arguments[0].click();", register)
 		WebDriverWait(browser, 10000)
+        while True:
+        if (browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')):
+            yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')
+            cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+            yes.click()
+            WebDriverWait(browser, 10)
+            cont.click()
 		break
 

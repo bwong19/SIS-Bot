@@ -1,5 +1,5 @@
-# SIS Bot #
-### (adapted from nkrishn9's SIS Bot)  ###
+# SIS Bot v4 #
+### (updated from nkrishn9's and yzhan289's SIS Bots)  ###
 
 This selenium bot allows you to register for classes on the Johns Hopkins SIS portal right at 7:00 AM, virtually guaranteeing a spot in all of your classes.
 
