@@ -59,13 +59,34 @@ while True:
     if current_hour >= 7:
         register.click()
         WebDriverWait(browser, 10000)
-        while True:
+        clear = False
+        while warning:
+            warning = False
             try:
                 yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')
                 cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
                 yes.click()
                 WebDriverWait(browser, 10)
                 cont.click()
+                warning = True
             except:
-                break
+                pass
+            try:
+                yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbOverrideYes')
+                cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+                yes.click()
+                WebDriverWait(browser, 10)
+                cont.click()
+                warning = True
+            except:
+                pass
+            try:
+                yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbApprovalYes')
+                cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+                yes.click()
+                WebDriverWait(browser, 10)
+                cont.click()
+                warning = True
+            except:
+                pass
         break
