@@ -16,7 +16,7 @@ try:
 	usernameStr = sys.argv[1]
 	passwordStr = sys.argv[2]
 except BaseException:
-	print("\nError: This script should be run with the following (valid) flags:\n python bot.py SIS_Username SIS_Password\n")
+	print("\nError: This script should be run with the following (valid) flags:\n python bot.py <jhed@jh.edu> SIS_Password\n")
 	sys.exit(-1)
 
 browser = webdriver.Chrome()
@@ -35,27 +35,37 @@ WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "aspnetF
 browser.get("https://sis.jhu.edu/sswf/SSS/EnrollmentCart/SSS_EnrollmentCart.aspx?MyIndex=88199")
 
 
-WebDriverWait(browser, 10)
-selectAll = browser.find_element_by_id('SelectAllCheckBox')
+WebDriverWait(browser, 10).until(lambda d: d.find_element_by_id('SelectAllCheckBox'))
+selectAll = browser.find_element_by_id("SelectAllCheckBox")
 selectAll.click()
 
-WebDriverWait(browser, 10)
+WebDriverWait(browser, 10).until(lambda d: d.find_element_by_id('ctl00_contentPlaceHolder_ibEnroll'))
 register = browser.find_element_by_id("ctl00_contentPlaceHolder_ibEnroll")
 
 # Wait until its 7 O'clock
 while True:
-	current_hour = datetime.datetime.now().time().hour
-	if current_hour >= 7:
-		browser.execute_script("arguments[0].click();", register)
-		WebDriverWait(browser, 10000)
+    current_hour = datetime.datetime.now().time().hour
+    current_time = datetime.datetime.now()
+
+    time = current_time.strftime("%H:%M:%S")
+    print(time, end="\r")
+
+    try:
+        alert = browser.switch_to.alert
+        alert.accept()
+    except:
+        pass
+
+    if current_hour >= 7:
+        register.click()
+        WebDriverWait(browser, 10000)
         while True:
-            if (browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')):
+            try:
                 yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')
                 cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
                 yes.click()
                 WebDriverWait(browser, 10)
                 cont.click()
-            else:
+            except:
                 break
         break
-
