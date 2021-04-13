@@ -67,9 +67,8 @@ register = browser.find_element_by_id("ctl00_contentPlaceHolder_ibEnroll")
 # # Wait until its 7 O'clock
 while True:
     hr = datetime.datetime.now().time().hour
-    min = datetime.datetime.now().time().minute
-    # if hr == 7:
-    if min == 19:
+    #min = datetime.datetime.now().time().minute
+    if hr == 7:
         browser.execute_script("arguments[0].click();", register)
         WebDriverWait(browser, 10000)
         
