@@ -59,7 +59,7 @@ while True:
     if current_hour >= 7:
         register.click()
         WebDriverWait(browser, 10000)
-        clear = False
+        warning = True
         while warning:
             warning = False
             try:
