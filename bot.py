@@ -1,16 +1,16 @@
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException  
-from selenium.webdriver.support.ui import Select 
-import datetime
-import os 
-import sys
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.common.action_chains import ActionChains
 
-EMAILFIELD = (By.ID, "i0116")
-PASSWORDFIELD = (By.ID, "i0118")
-NEXTBUTTON = (By.ID, "idSIButton9")
+import datetime
+import os
+import sys
 
 try:
 	usernameStr = sys.argv[1]
@@ -19,52 +19,66 @@ except BaseException:
 	print("\nError: This script should be run with the following (valid) flags:\n python bot.py <jhed@jh.edu> SIS_Password\n")
 	sys.exit(-1)
 
-browser = webdriver.Chrome()
-browser.get(('https://sis.jhu.edu/sswf/'))
+browser = webdriver.Chrome(ChromeDriverManager().install())
 
+browser.get(('https://sis.jhu.edu/sswf/'))
 nextButton = browser.find_element_by_id('linkSignIn')
 nextButton.click()
+WebDriverWait(browser, 10)
 
-WebDriverWait(browser, 10).until(EC.element_to_be_clickable(EMAILFIELD)).send_keys(usernameStr)
-WebDriverWait(browser, 10).until(EC.element_to_be_clickable(NEXTBUTTON)).click()
-WebDriverWait(browser, 10).until(EC.element_to_be_clickable(PASSWORDFIELD)).send_keys(passwordStr)
-WebDriverWait(browser, 10).until(EC.element_to_be_clickable(NEXTBUTTON)).click()
+username = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.NAME, 'loginfmt')))
+username.send_keys(usernameStr)
+
+WebDriverWait(browser, 10)
+submit1button = browser.find_element_by_id("idSIButton9")
+submit1button.click()
+
+WebDriverWait(browser, 10)
+password = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.NAME, 'passwd')))
+password.send_keys(passwordStr)
+
+WebDriverWait(browser, 10)
+staleElement = True;
+
+while staleElement:
+    try:
+        submit = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+        submit.click()
+        staleElement = False
+
+    except StaleElementReferenceException:
+
+        staleElement = True
 
 
 WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "aspnetForm")))
+
 browser.get("https://sis.jhu.edu/sswf/SSS/EnrollmentCart/SSS_EnrollmentCart.aspx?MyIndex=88199")
 
 
-WebDriverWait(browser, 10).until(lambda d: d.find_element_by_id('SelectAllCheckBox'))
-selectAll = browser.find_element_by_id("SelectAllCheckBox")
+wait = WebDriverWait(browser, 10)
+# selectAll = browser.find_element_by_id('SelectAllCheckBox')
+selectAll = wait.until(EC.element_to_be_clickable((By.ID, 'SelectAllCheckBox')))
 selectAll.click()
 
-WebDriverWait(browser, 10).until(lambda d: d.find_element_by_id('ctl00_contentPlaceHolder_ibEnroll'))
+WebDriverWait(browser, 10)
 register = browser.find_element_by_id("ctl00_contentPlaceHolder_ibEnroll")
 
-# Wait until its 7 O'clock
+# # Wait until its 7 O'clock
 while True:
-    current_hour = datetime.datetime.now().time().hour
-    current_time = datetime.datetime.now()
-
-    time = current_time.strftime("%H:%M:%S")
-    print(time, end="\r")
-
-    try:
-        alert = browser.switch_to.alert
-        alert.accept()
-    except:
-        pass
-
-    if current_hour >= 7:
-        register.click()
+    hr = datetime.datetime.now().time().hour
+    min = datetime.datetime.now().time().minute
+    if hr >= 7:
+        browser.execute_script("arguments[0].click();", register)
         WebDriverWait(browser, 10000)
+        
         warning = True
         while warning:
             warning = False
             try:
                 yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')
                 cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+                WebDriverWait(browser, 10)
                 yes.click()
                 WebDriverWait(browser, 10)
                 cont.click()
@@ -74,6 +88,7 @@ while True:
             try:
                 yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbOverrideYes')
                 cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+                WebDriverWait(browser, 10)
                 yes.click()
                 WebDriverWait(browser, 10)
                 cont.click()
@@ -83,6 +98,7 @@ while True:
             try:
                 yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbApprovalYes')
                 cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+                WebDriverWait(browser, 10)
                 yes.click()
                 WebDriverWait(browser, 10)
                 cont.click()
@@ -90,3 +106,4 @@ while True:
             except:
                 pass
         break
+
