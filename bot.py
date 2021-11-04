@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
+from getpass import getpass
 
 import datetime
 import os
@@ -14,10 +15,11 @@ import sys
 
 try:
 	usernameStr = sys.argv[1]
-	passwordStr = sys.argv[2]
 except BaseException:
-	print("\nError: This script should be run with the following (valid) flags:\n python bot.py <jhed@jh.edu> SIS_Password\n")
+	print("\nError: This script should be run with the following (valid) flags:\n python bot.py <jhed@jh.edu>\n")
 	sys.exit(-1)
+ 
+passwordStr = getpass()
 
 browser = webdriver.Chrome(ChromeDriverManager().install())
 
