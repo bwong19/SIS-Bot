@@ -1,3 +1,2 @@
 webdriver_manager
-getpass
 selenium
