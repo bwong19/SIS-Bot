@@ -25,6 +25,7 @@ browser = webdriver.Chrome(ChromeDriverManager().install())
 
 browser.get(('https://sis.jhu.edu/sswf/'))
 nextButton = browser.find_element_by_id('linkSignIn')
+WebDriverWait(browser, 10)
 nextButton.click()
 WebDriverWait(browser, 10)
 
