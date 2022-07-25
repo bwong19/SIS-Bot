@@ -1,3 +1,4 @@
+from tokenize import String
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
@@ -12,6 +13,19 @@ from getpass import getpass
 import datetime
 import os
 import sys
+
+def dismiss_warnings(browser, prompt_type: String):
+    try:
+        yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rb{prompt_type}Yes')
+        cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
+        WebDriverWait(browser, 10)
+        yes.click()
+        WebDriverWait(browser, 10)
+        cont.click()
+        return True
+    except:
+        return False
+
 
 try:
 	usernameStr = sys.argv[1]
@@ -41,33 +55,28 @@ password = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.NAME,
 password.send_keys(passwordStr)
 
 WebDriverWait(browser, 10)
-staleElement = True;
+staleElement = True
 
 while staleElement:
     try:
         submit = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
         submit.click()
         staleElement = False
-
     except StaleElementReferenceException:
-
         staleElement = True
-
 
 WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.ID, "aspnetForm")))
 
 browser.get("https://sis.jhu.edu/sswf/SSS/EnrollmentCart/SSS_EnrollmentCart.aspx?MyIndex=88199")
 
-
 wait = WebDriverWait(browser, 10)
-# selectAll = browser.find_element_by_id('SelectAllCheckBox')
 selectAll = wait.until(EC.element_to_be_clickable((By.ID, 'SelectAllCheckBox')))
 selectAll.click()
 
 WebDriverWait(browser, 10)
 register = browser.find_element_by_id("ctl00_contentPlaceHolder_ibEnroll")
 
-# # Wait until its 7 O'clock
+# Wait until its 7 O'clock
 while True:
     hr = datetime.datetime.now().time().hour
     min = datetime.datetime.now().time().minute
@@ -78,35 +87,8 @@ while True:
         warning = True
         while warning:
             warning = False
-            try:
-                yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbWaitlistYes')
-                cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
-                WebDriverWait(browser, 10)
-                yes.click()
-                WebDriverWait(browser, 10)
-                cont.click()
-                warning = True
-            except:
-                pass
-            try:
-                yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbOverrideYes')
-                cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
-                WebDriverWait(browser, 10)
-                yes.click()
-                WebDriverWait(browser, 10)
-                cont.click()
-                warning = True
-            except:
-                pass
-            try:
-                yes = browser.find_element_by_id('ctl00_contentPlaceHolder_rbApprovalYes')
-                cont = browser.find_element_by_id('ctl00_contentPlaceHolder_cmdContinue')
-                WebDriverWait(browser, 10)
-                yes.click()
-                WebDriverWait(browser, 10)
-                cont.click()
-                warning = True
-            except:
-                pass
+            warning |= dismiss_warnings(browser, 'Waitlist')
+            warning |= dismiss_warnings(browser, 'Override')
+            warning |= dismiss_warnings(browser, 'Approval')
         break
 
