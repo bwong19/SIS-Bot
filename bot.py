@@ -74,7 +74,7 @@ else:
 while True:
   hr = datetime.datetime.now().time().hour
   min = datetime.datetime.now().time().minute
-  if hr >= 7 and min >= 59:
+  if hr >= 7:
     # browser.execute_script("arguments[0].click();", register)
     click_button(browser, register_str, 0)
     
