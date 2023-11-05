@@ -6,14 +6,21 @@ This selenium bot allows you to register for classes on the Johns Hopkins SIS po
 ### WARNING: This has only been tested on Mac OS (and will probably only work on it). ###
 
 ## Setup Instructions ##
-First, make sure all of the classes you want to register for are in your cart on SIS.
-
+Open Terminal and navigate to the directory you wish to install in (e.g. ~/Documents). Run the following commands:
 ```
 git clone https://github.com/bwong19/SIS-Bot.git
 cd SIS-Bot
 pip install -r requirements.txt
-brew cask install chromedriver
+brew install chromedriver --cask
 ```
+
+If you run into an error where chromedriver cannot be verified (see below), remove the quarantine from the chromedriver binary:
+
+```
+xattr -d com.apple.quarantine <(which chromedriver)
+```
+
+![chromedriver error](./chromedriver_error.png "chromedriver error")
 
 SIS uses the naval observatory clock to determine time. Therefore, your system must be synced to this clock to ensure the bot does not click too early or too late. On Mac OS, it is really easy to change your default.
 
@@ -22,11 +29,20 @@ SIS uses the naval observatory clock to determine time. Therefore, your system m
 3. Change "Apple Americas/U.S. (time.apple.com.)" to "tick.usno.navy.mil"
 4. Click the lock again to save your changes.
 
-![time instructions](https://github.com/bwong19/SIS-Bot/blob/master/time_instruct.png "Logo Title Text 1")
+![time instructions](./time_instruct.png "Time instructions")
 
 
 ## Running Instructions ##
-Begin running at least a minute before 7:00 AM. The program will wait/keep running until 7:00 AM to register you for your classes.
+Make sure your cart is ordered by priority. If there is a class that is waitlisted, requires override, requires approval, etc. place it lower on the list.
+
+Run the command.
 ```
-python bot.py SIS_Username SIS_Password
+python bot.py <jhed@jh.edu>
 ```
+The bot will then prompt you for your password.
+If you have both a graduate and undergraduate record, SIS may ask you to select which one you want to register for. In this case, run the following command instead:
+```
+python bot.py <jhed@jh.edu> grad
+```
+
+Begin running about a minute before 7:00 AM. The program will wait/keep running until 7:00 AM to register you for your classes.
