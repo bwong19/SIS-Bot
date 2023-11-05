@@ -31,13 +31,15 @@ Run the command.
 ```
 python bot.py jhed@jh.edu
 ```
-The bot will then prompt you for your password.
+The bot will then prompt you for your password. Note that the password is not checked by the script, so make sure that you enter it correctly.
 If you have both a graduate and undergraduate record, SIS may ask you to select which one you want to register for. In this case, run the following command instead:
 ```
 python bot.py jhed@jh.edu grad
 ```
 
 Begin running about a minute before 7:00 AM. The program will wait/keep running until 7:00 AM to register you for your classes.
+
+Note: There is an annoyance where closing the window and/or inputting Ctrl+C will not stop the script. To run it again, open another Terminal tab and input the command. 
 
 ## Debugging ##
 If you run into an error where chromedriver cannot be verified (see below), remove the quarantine from the chromedriver binary. This command will only be effective once since the quarantine won't exist afterwards, so if you can't run it again successfully, chances are it works.

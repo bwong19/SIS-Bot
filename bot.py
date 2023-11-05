@@ -77,21 +77,22 @@ else:
 # Wait until its 7 O'clock
 with browser:
   try:
-    hr = datetime.datetime.now().time().hour
-    min = datetime.datetime.now().time().minute
-    if hr >= 7:
-      # browser.execute_script("arguments[0].click();", register)
-      click_button(browser, register_str, 0)
-      
-      if (button_exists(browser, 'ctl00_contentPlaceHolder_cmdSubmit')):
-        click_button(browser, 'ctl00_contentPlaceHolder_cmdSubmit')
-      
-      warning = True
-      while warning:
-        warning = False
-        warning |= dismiss_warnings(browser, 'Waitlist')
-        warning |= dismiss_warnings(browser, 'Override')
-        warning |= dismiss_warnings(browser, 'Approval')
+    while True:
+      hr = datetime.datetime.now().time().hour
+      min = datetime.datetime.now().time().minute
+      if hr >= 7:
+        # browser.execute_script("arguments[0].click();", register)
+        click_button(browser, register_str, 0)
+        
+        if (button_exists(browser, 'ctl00_contentPlaceHolder_cmdSubmit')):
+          click_button(browser, 'ctl00_contentPlaceHolder_cmdSubmit')
+        
+        warning = True
+        while warning:
+          warning = False
+          warning |= dismiss_warnings(browser, 'Waitlist')
+          warning |= dismiss_warnings(browser, 'Override')
+          warning |= dismiss_warnings(browser, 'Approval')
   except KeyboardInterrupt:
     print("Exiting")
   finally:
