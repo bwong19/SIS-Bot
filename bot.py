@@ -3,11 +3,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import StaleElementReferenceException
 from getpass import getpass
 
 import datetime
-import os
 import sys
 
 def click_button(browser, button_id: String, wait_duration: int = 20):
@@ -17,7 +15,7 @@ def click_button(browser, button_id: String, wait_duration: int = 20):
       submit = WebDriverWait(browser, wait_duration).until(EC.element_to_be_clickable((By.ID, button_id)))
       submit.click()
       staleElement = False
-    except StaleElementReferenceException:
+    except:
       staleElement = True
    
 def dismiss_warnings(browser, prompt_type: String):
@@ -28,10 +26,16 @@ def dismiss_warnings(browser, prompt_type: String):
   except:
     return False
 
+def button_exists(browser, button_id: String):
+  try: 
+    button = browser.find_element(By.ID, button_id) 
+    return True 
+  except: 
+    return False
 
 try:
     usernameStr = sys.argv[1]
-    isgrad = (sys.argv[2] and sys.argv[2] == 'grad')
+    isgrad = (len(sys.argv) >= 3 and sys.argv[2] == 'grad')
 except BaseException:
     print("\nError: This script should be run with the following (valid) flags:\n python bot.py <jhed@jh.edu>\n")
     sys.exit(-1)
@@ -71,16 +75,24 @@ else:
   register = browser.find_element('id', "ctl00_contentPlaceHolder_ibEnroll")
 
 # Wait until its 7 O'clock
-while True:
-  hr = datetime.datetime.now().time().hour
-  min = datetime.datetime.now().time().minute
-  if hr >= 7:
-    # browser.execute_script("arguments[0].click();", register)
-    click_button(browser, register_str, 0)
-    
-    warning = True
-    while warning:
-      warning = False
-      warning |= dismiss_warnings(browser, 'Waitlist')
-      warning |= dismiss_warnings(browser, 'Override')
-      warning |= dismiss_warnings(browser, 'Approval')
+with browser:
+  try:
+    hr = datetime.datetime.now().time().hour
+    min = datetime.datetime.now().time().minute
+    if hr >= 7:
+      # browser.execute_script("arguments[0].click();", register)
+      click_button(browser, register_str, 0)
+      
+      if (button_exists(browser, 'ctl00_contentPlaceHolder_cmdSubmit')):
+        click_button(browser, 'ctl00_contentPlaceHolder_cmdSubmit')
+      
+      warning = True
+      while warning:
+        warning = False
+        warning |= dismiss_warnings(browser, 'Waitlist')
+        warning |= dismiss_warnings(browser, 'Override')
+        warning |= dismiss_warnings(browser, 'Approval')
+  except KeyboardInterrupt:
+    print("Exiting")
+  finally:
+    browser.quit()
