@@ -42,7 +42,7 @@ Begin running about a minute before 7:00 AM. The program will wait/keep running 
 Note: There is an annoyance where closing the window and/or inputting Ctrl+C will not stop the script. To run it again, open another Terminal tab and input the command. 
 
 ## Debugging ##
-If you run into an error where chromedriver cannot be verified (see below), remove the quarantine from the chromedriver binary. This command will only be effective once since the quarantine won't exist afterwards, so if you can't run it again successfully, chances are it works.
+If you run into an error where chromedriver cannot be verified (one such example can be found below), remove the quarantine from the chromedriver binary. This command will only be effective once since the quarantine won't exist afterwards, so if you can't run it again successfully, chances are you did it right.
 
 ```
 xattr -d com.apple.quarantine $(which chromedriver)
